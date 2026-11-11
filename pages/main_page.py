@@ -1,5 +1,4 @@
 import allure
-from selenium.webdriver.support.ui import WebDriverWait
 
 from data import ORDER_NUMBER_PLACEHOLDER
 from locators.main_page_locators import MainPageLocators
@@ -47,7 +46,4 @@ class MainPage(BasePage):
 
     def get_order_number(self):
         # Сначала в окне заглушка 9999, затем номер от сервера
-        WebDriverWait(self.driver, 15).until(
-            lambda driver: self.get_text(MainPageLocators.ORDER_NUMBER) != ORDER_NUMBER_PLACEHOLDER
-        )
-        return self.get_text(MainPageLocators.ORDER_NUMBER)
+        return self.wait_for_text_change(MainPageLocators.ORDER_NUMBER, ORDER_NUMBER_PLACEHOLDER)

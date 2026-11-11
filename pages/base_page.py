@@ -41,8 +41,27 @@ class BasePage:
             self.wait_for_loading()
             element.click()
 
+    def find_elements(self, locator):
+        self.find_element(locator)
+        return self.driver.find_elements(*locator)
+
     def get_text(self, locator):
         return self.find_element(locator).text
+
+    def get_texts(self, locator):
+        return [element.text for element in self.find_elements(locator)]
+
+    def wait_for_text_in_element(self, locator, text, timeout=15):
+        return WebDriverWait(self.driver, timeout).until(EC.text_to_be_present_in_element(locator, text))
+
+    def wait_for_text_change(self, locator, old_text, timeout=15):
+        # Ожидание, пока текст элемента станет отличным от old_text
+        WebDriverWait(self.driver, timeout).until(lambda driver: self.get_text(locator) != old_text)
+        return self.get_text(locator)
+
+    def wait_for_number_increase(self, locator, old_value, timeout=15):
+        WebDriverWait(self.driver, timeout).until(lambda driver: int(self.get_text(locator)) > old_value)
+        return int(self.get_text(locator))
 
     def is_displayed(self, locator):
         return self.find_element(locator).is_displayed()

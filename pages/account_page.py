@@ -23,5 +23,4 @@ class AccountPage(BasePage):
         self.click_element(AccountPageLocators.LOGOUT_BUTTON)
 
     def get_order_numbers(self):
-        self.find_element(AccountPageLocators.ORDER_NUMBERS)
-        return [element.text for element in self.driver.find_elements(*AccountPageLocators.ORDER_NUMBERS)]
+        return self.get_texts(AccountPageLocators.ORDER_NUMBERS)

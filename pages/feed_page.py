@@ -1,6 +1,4 @@
 import allure
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait
 
 from locators.feed_page_locators import FeedPageLocators
 from pages.base_page import BasePage
@@ -25,14 +23,11 @@ class FeedPage(BasePage):
 
     def is_order_in_feed(self, order_number):
         # Номер в ленте с решёткой и нулями, например #0618
-        return WebDriverWait(self.driver, 15).until(
-            EC.text_to_be_present_in_element(FeedPageLocators.ORDER_LIST, order_number)
-        )
+        return self.wait_for_text_in_element(FeedPageLocators.ORDER_LIST, order_number)
 
     def get_counter(self, locator):
         # Счётчик приходит с сервера не сразу, до этого на странице 0
-        WebDriverWait(self.driver, 15).until(lambda driver: self.get_text(locator) != "0")
-        return int(self.get_text(locator))
+        return int(self.wait_for_text_change(locator, "0"))
 
     def get_total_counter(self):
         return self.get_counter(FeedPageLocators.TOTAL_COUNTER)
@@ -41,10 +36,7 @@ class FeedPage(BasePage):
         return self.get_counter(FeedPageLocators.TODAY_COUNTER)
 
     def wait_for_counter_increase(self, locator, old_value):
-        WebDriverWait(self.driver, 15).until(lambda driver: int(self.get_text(locator)) > old_value)
-        return int(self.get_text(locator))
+        return self.wait_for_number_increase(locator, old_value)
 
     def is_order_in_work(self, order_number):
-        return WebDriverWait(self.driver, 15).until(
-            EC.text_to_be_present_in_element(FeedPageLocators.IN_WORK_LIST, order_number)
-        )
+        return self.wait_for_text_in_element(FeedPageLocators.IN_WORK_LIST, order_number)
